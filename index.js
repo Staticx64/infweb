@@ -30,18 +30,24 @@ const formWrapper = document.createElement("div");
 container.appendChild(formWrapper);
 
 function renderForm(type) {
-  formWrapper.innerHTML = ""; // Clear previous form
+  formWrapper.innerHTML = "";
   const form = document.createElement("form");
   form.innerHTML = `
     <h2>${type}</h2>
     <input type="text" placeholder="Username" required style="display:block;width:100%;margin-bottom:10px;padding:8px;" />
     <input type="password" placeholder="Password" required style="display:block;width:100%;margin-bottom:10px;padding:8px;" />
-    ${type === "Register" ? `<input type="email" placeholder="Email" required style="display:block;width:100%;margin-bottom:10px;padding:8px;" />` : ""}
+    ${type === "Register"
+      ? `<input type="email" placeholder="Email" required style="display:block;width:100%;margin-bottom:10px;padding:8px;" />`
+      : ""}
     <button type="submit" style="padding:10px;width:100%;">${type}</button>
   `;
   form.onsubmit = (e) => {
     e.preventDefault();
-    alert(`${type} successful!`);
+    if (type === "Login") {
+      renderDashboard();
+    } else {
+      alert("Register successful!");
+    }
   };
   formWrapper.appendChild(form);
 }
@@ -52,3 +58,70 @@ renderForm("Login");
 // Event listeners
 document.getElementById("showLogin").onclick = () => renderForm("Login");
 document.getElementById("showRegister").onclick = () => renderForm("Register");
+
+// 🔥 DASHBOARD
+function renderDashboard() {
+  document.body.innerHTML = "";
+  document.body.style.margin = "0";
+  document.body.style.fontFamily = "Arial, sans-serif";
+  document.body.style.backgroundColor = "#f5f5f5";
+
+  const nav = document.createElement("div");
+  nav.style.display = "flex";
+  nav.style.justifyContent = "space-between";
+  nav.style.alignItems = "center";
+  nav.style.padding = "10px 20px";
+  nav.style.backgroundColor = "#ffffff";
+  nav.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+  document.body.appendChild(nav);
+
+  const logo = document.createElement("img");
+  logo.src = "Logo.png"; // Replace with actual logo
+  logo.alt = "Logo";
+  logo.style.height = "40px";
+  nav.appendChild(logo);
+
+  const menuContainer = document.createElement("div");
+  menuContainer.style.position = "relative";
+
+  const menuBtn = document.createElement("img");
+  menuBtn.src = "menu-icon.png"; // Replace with your menu icon
+  menuBtn.alt = "Menu";
+  menuBtn.style.height = "36px";
+  menuBtn.style.cursor = "pointer";
+  menuContainer.appendChild(menuBtn);
+
+  const dropdown = document.createElement("div");
+  dropdown.style.position = "absolute";
+  dropdown.style.top = "100%";
+  dropdown.style.right = "0";
+  dropdown.style.background = "#fff";
+  dropdown.style.border = "1px solid #ccc";
+  dropdown.style.borderRadius = "4px";
+  dropdown.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+  dropdown.style.display = "none";
+  dropdown.innerHTML = `
+    <div style="padding: 10px; cursor: pointer;">View Profile</div>
+    <div style="padding: 10px; cursor: pointer;">Logout</div>
+  `;
+  menuContainer.appendChild(dropdown);
+
+  menuBtn.onclick = () => {
+    dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+  };
+
+  dropdown.onclick = (e) => {
+    const action = e.target.innerText;
+    if (action === "Logout") {
+      location.reload();
+    } else if (action === "View Profile") {
+      alert("Profile page coming soon!");
+    }
+  };
+
+  nav.appendChild(menuContainer);
+
+  const main = document.createElement("div");
+  main.innerHTML = `<h1 style="padding: 20px;">Welcome to your Dashboard</h1>`;
+  document.body.appendChild(main);
+}
