@@ -1,3 +1,4 @@
+let currentForm = "Login";
 document.body.style.fontFamily = "Arial, sans-serif";
 document.body.style.margin = "0";
 document.body.style.display = "flex";
@@ -42,13 +43,13 @@ function renderForm(type) {
     <button type="submit" style="padding:10px;width:100%;">${type}</button>
   `;
   form.onsubmit = (e) => {
-    e.preventDefault();
-    if (type === "Login") {
-      renderDashboard();
-    } else {
-      alert("Register successful!");
-    }
-  };
+  e.preventDefault();
+  if (currentForm === "Login") {
+    renderDashboard();
+  } else {
+    alert("Register successful!");
+  }
+};
   formWrapper.appendChild(form);
 }
 
@@ -56,8 +57,15 @@ function renderForm(type) {
 renderForm("Login");
 
 // Event listeners
-document.getElementById("showLogin").onclick = () => renderForm("Login");
-document.getElementById("showRegister").onclick = () => renderForm("Register");
+document.getElementById("showLogin").onclick = () => {
+  currentForm = "Login";
+  renderForm(currentForm);
+};
+
+document.getElementById("showRegister").onclick = () => {
+  currentForm = "Register";
+  renderForm(currentForm);
+};
 
 // 🔥 DASHBOARD
 function renderDashboard() {
