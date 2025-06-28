@@ -8,6 +8,16 @@ document.body.style.justifyContent = "center";
 document.body.style.height = "100vh";
 document.body.style.backgroundColor = "#f0f0f0";
 
+function getUsers() {
+  return JSON.parse(localStorage.getItem("users") || "[]");
+}
+
+function saveUser(user) {
+  const users = getUsers();
+  users.push(user);
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
 // Create container
 const container = document.createElement("div");
 container.style.background = "#fff";
@@ -44,10 +54,34 @@ function renderForm(type) {
   `;
   form.onsubmit = (e) => {
   e.preventDefault();
+form.onsubmit = (e) => {
+  e.preventDefault();
+  const username = form.querySelector('input[placeholder="Username"]').value;
+  const password = form.querySelector('input[placeholder="Password"]').value;
+
   if (currentForm === "Login") {
-    renderDashboard();
-  } else {
-    alert("Register successful!");
+    const users = getUsers();
+    const matched = users.find(u => u.username === username && u.password === password);
+
+    if (matched) {
+      renderDashboard(matched.username); // pass username in
+    } else {
+      alert("Invalid credentials!");
+    }
+
+  } else if (currentForm === "Register") {
+    const email = form.querySelector('input[placeholder="Email"]').value;
+    const users = getUsers();
+    const exists = users.some(u => u.username === username);
+
+    if (exists) {
+      alert("Username already taken.");
+    } else {
+      saveUser({ username, password, email });
+      alert("Register successful!");
+      currentForm = "Login";
+      renderForm(currentForm);
+    }
   }
 };
   formWrapper.appendChild(form);
